@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyContentsChecker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="portfolio.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#home"><span class="brand-mark">M</span><span>MyContents<br /><b>Checker</b></span></a>
+        <nav aria-label="주 메뉴">
+          <button class="nav-item active" data-view="home"><span>⌂</span> 내 콘텐츠</button>
+          <button class="nav-item" data-view="search"><span>⌕</span> 콘텐츠 찾기</button>
+          <button class="nav-item" data-view="trash"><span>♲</span> 휴지통</button>
+          <button class="nav-item" data-view="settings"><span>⚙</span> 설정</button>
+        </nav>
+        <div class="sidebar-bottom"><span>✦</span><p>시청 기록은 이 컴퓨터의<br /><b>브라우저에만 저장됩니다.</b></p></div>
+      </aside>
+      <main>
+        <header class="topbar"><div><p class="eyebrow" id="page-kicker">MY LIBRARY</p><h1 id="page-title">내 콘텐츠</h1></div><button class="primary-button" id="add-content">＋ 콘텐츠 추가</button></header>
+        <section class="view active" id="home-view">
+          <div class="library-tools"><label class="input-with-icon"><span>⌕</span><input id="library-query" placeholder="내 콘텐츠 검색" /></label><div class="filter-pills"><button data-filter="all" class="active">전체</button><button data-filter="watching">시청 중</button><button data-filter="done">완료</button></div></div>
+          <p class="result-count" id="library-count"></p><div class="content-grid" id="content-grid"></div><div class="empty-state hidden" id="empty-library"><div>◌</div><h2>등록한 콘텐츠가 없어요</h2><p>보고 있는 작품을 추가해 보세요.</p><button class="primary-button" data-go-search>콘텐츠 찾기</button></div>
+        </section>
+        <section class="view" id="search-view"><div class="page-intro"><p>TMDB를 먼저 검색하며 결과가 없으면 TVmaze를 사용합니다.</p></div><div class="search-row"><label class="input-with-icon search-input"><span>⌕</span><input id="search-query" placeholder="영화, 드라마, 애니메이션 제목" /></label><button class="primary-button" id="search-button">검색</button></div><div class="search-tools"><span id="search-status">제목을 입력해 검색하세요.</span><label>정렬 <select id="search-sort"><option value="relevance">관련도순</option><option value="newest">최신순</option><option value="oldest">날짜순</option></select></label></div><div class="search-results" id="search-results"></div></section>
+        <section class="view" id="detail-view"><button class="back-button" data-view="home">← 라이브러리로 돌아가기</button><div id="detail-content"></div></section>
+        <section class="view" id="trash-view"><div class="page-intro"><p>삭제한 콘텐츠는 30일간 보관됩니다.</p></div><div class="search-results" id="trash-list"></div></section>
+        <section class="view" id="settings-view"><div class="page-intro"><p>API 토큰은 이 브라우저에만 저장됩니다.</p></div><article class="settings-card"><div class="settings-heading"><div><h3>TMDB API</h3><p>한국어 콘텐츠, 영화, 드라마 및 애니메이션 검색</p></div><span class="connection-state" id="tmdb-state"></span></div><label class="form-label">API Read Access Token<input type="password" id="tmdb-token" autocomplete="off" placeholder="TMDB Read Access Token" /></label><div class="settings-actions"><button class="primary-button" id="save-token">저장</button><button class="secondary-button" id="clear-token">연결 해제</button></div></article><article class="settings-card demo-card"><div><h3>포트폴리오 데모</h3><p>초기 콘텐츠, 시청 기록, 댓글을 다시 불러옵니다.</p></div><button class="secondary-button" id="reset-demo">데모 데이터 초기화</button></article><article class="settings-card attribution-card"><h3>데이터 출처</h3><p>선택적 검색과 데모 콘텐츠의 일부 메타데이터·표지는 TMDB, TVmaze 및 공식 배급사 자료를 사용합니다. 이 제품은 TMDB의 보증 또는 인증을 받지 않았습니다.</p><p><a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB</a> · <a href="https://www.tvmaze.com/" target="_blank" rel="noreferrer">TVmaze</a></p></article></section>
+      </main>
+    </div>
+    <nav class="mobile-nav" aria-label="모바일 메뉴">
+      <button data-view="home" aria-label="내 콘텐츠"><span>⌂</span><small>내 콘텐츠</small></button>
+      <button data-view="search" aria-label="콘텐츠 찾기"><span>⌕</span><small>찾기</small></button>
+      <button data-view="trash" aria-label="휴지통"><span>♲</span><small>휴지통</small></button>
+      <button data-view="settings" aria-label="설정"><span>⚙</span><small>설정</small></button>
+    </nav>
+    <dialog id="confirm-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-message"><form method="dialog"><h2 id="dialog-title">확인</h2><p id="dialog-message"></p><div class="dialog-actions"><button value="cancel" class="secondary-button">취소</button><button value="confirm" class="primary-button" id="dialog-confirm">확인</button></div></form></dialog>
+    <script src="demo-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

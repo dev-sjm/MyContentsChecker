@@ -1,0 +1,666 @@
+:root {
+  --ink:#202a34;
+  --muted:#78818b;
+  --line:#e8e5df;
+  --paper:#fffdfa;
+  --canvas:#f6f4ef;
+  --navy:#253849;
+  --coral:#e95d49;
+  --soft:#f8f1eb;
+  --green:#438c75
+}
+* {
+  box-sizing:border-box
+}
+body {
+  margin:0;
+  background:var(--canvas);
+  color:var(--ink);
+  font-family:'DM Sans','Noto Sans KR',sans-serif
+}
+button,input,select,textarea {
+  font:inherit
+}
+button {
+  cursor:pointer;
+  border:0
+}
+.app-shell {
+  min-height:100vh;
+  display:flex
+}
+.sidebar {
+  background:#202d3b;
+  color:#b7c2cc;
+  width:244px;
+  padding:30px 19px;
+  position:fixed;
+  inset:0 auto 0 0;
+  display:flex;
+  flex-direction:column
+}
+.brand {
+  display:flex;
+  gap:10px;
+  align-items:center;
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  line-height:1.1
+}
+.brand-mark {
+  display:grid;
+  place-items:center;
+  width:33px;
+  height:33px;
+  border-radius:10px;
+  background:var(--coral);
+  font:bold 18px Georgia
+}
+.sidebar nav {
+  display:grid;
+  gap:5px;
+  margin-top:57px
+}
+.nav-item {
+  background:none;
+  border-radius:8px;
+  color:#aab6c0;
+  text-align:left;
+  padding:12px 13px;
+  font-size:13px
+}
+.nav-item span {
+  display:inline-block;
+  width:24px;
+  font-size:18px
+}
+.nav-item:hover,.nav-item.active {
+  color:#fff;
+  background:#334655
+}
+.sidebar-bottom {
+  display:flex;
+  gap:10px;
+  margin-top:auto;
+  border-top:1px solid #394a59;
+  padding:19px 9px 0;
+  font-size:11px;
+  line-height:1.65
+}
+.sidebar-bottom span {
+  color:#f6c84c
+}
+main {
+  width:calc(100% - 244px);
+  margin-left:244px;
+  max-width:1500px;
+  padding:0 clamp(30px,6vw,100px) 65px
+}
+.topbar {
+  height:138px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+.eyebrow {
+  margin:0 0 6px;
+  color:#9199a1;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.4px
+}
+.topbar h1,.page-intro h2 {
+  margin:0;
+  font-size:25px;
+  letter-spacing:-1px
+}
+.primary-button {
+  background:var(--coral);
+  color:white;
+  border-radius:8px;
+  padding:11px 16px;
+  font-size:12px;
+  font-weight:700;
+  box-shadow:0 4px 12px #e95d4928
+}
+.secondary-button {
+  background:#eeece7;
+  color:#505b64;
+  border-radius:7px;
+  padding:9px 13px;
+  font-size:12px
+}
+.text-button {
+  background:none;
+  color:#7a838b;
+  font-size:11px;
+  padding:7px
+}
+.hidden {
+  display:none!important
+}
+.view {
+  display:none
+}
+.view.active {
+  display:block
+}
+.library-tools {
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:12px
+}
+.input-with-icon {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 13px;
+  min-width:260px
+}
+.input-with-icon span {
+  font-size:18px;
+  color:#89929a
+}
+.input-with-icon input {
+  border:0;
+  outline:0;
+  width:100%;
+  font-size:12px
+}
+.filter-pills {
+  display:flex;
+  gap:3px;
+  padding:3px;
+  background:#ebe9e4;
+  border-radius:8px
+}
+.filter-pills button {
+  background:transparent;
+  border-radius:6px;
+  color:#7d858c;
+  font-size:11px;
+  padding:7px 11px
+}
+.filter-pills button.active {
+  background:#fff;
+  color:#27313b;
+  box-shadow:0 1px 3px #0001
+}
+.result-count {
+  font-size:12px;
+  color:var(--muted);
+  margin:0 0 17px
+}
+.content-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
+  gap:23px
+}
+.content-card {
+  position:relative
+}
+.card-button {
+  background:none;
+  width:100%;
+  padding:0;
+  text-align:left
+}
+.poster {
+  display:block;
+  width:100%;
+  aspect-ratio:2/2.8;
+  object-fit:cover;
+  border-radius:10px;
+  background:#ddd
+}
+.card-copy {
+  padding:9px 2px
+}
+.card-title {
+  font-weight:700;
+  font-size:13px;
+  margin:0 0 4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+.card-meta,.empty-copy {
+  font-size:11px;
+  color:var(--muted);
+  margin:0
+}
+.progress-mini {
+  background:#dedbd5;
+  height:3px;
+  border-radius:3px;
+  margin-top:9px
+}
+.progress-mini i {
+  display:block;
+  height:100%;
+  background:var(--coral);
+  border-radius:3px
+}
+.card-trash {
+  position:absolute;
+  right:7px;
+  top:7px;
+  opacity:0;
+  background:#fff;
+  border-radius:6px;
+  color:#b24f42;
+  padding:6px;
+  transition:.15s
+}
+.content-card:hover .card-trash {
+  opacity:1
+}
+.empty-state {
+  text-align:center;
+  padding:80px 20px
+}
+.empty-state>div {
+  color:var(--coral);
+  font-size:42px
+}
+.empty-state h2 {
+  font-size:18px
+}
+.empty-state p,.page-intro p {
+  font-size:12px;
+  color:var(--muted)
+}
+.page-intro {
+  margin-bottom:26px
+}
+.search-row {
+  display:flex;
+  gap:9px;
+  max-width:720px
+}
+.search-input {
+  flex:1;
+  height:52px
+}
+.search-tools {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  max-width:720px;
+  margin:14px 0 20px;
+  color:var(--muted);
+  font-size:11px
+}
+.search-tools select,.episode-toolbar select {
+  border:1px solid var(--line);
+  border-radius:7px;
+  padding:7px;
+  background:#fff;
+  color:#4e5a64;
+  font-size:11px
+}
+.search-results {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:14px;
+  max-width:1000px
+}
+.search-card {
+  display:flex;
+  min-height:132px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden
+}
+.search-card img {
+  width:88px;
+  object-fit:cover;
+  background:#ddd
+}
+.result-copy {
+  padding:13px;
+  flex:1
+}
+.result-copy h3 {
+  font-size:14px;
+  margin:3px 0 5px
+}
+.result-copy p {
+  font-size:11px;
+  line-height:1.5;
+  color:var(--muted);
+  margin:0 0 10px
+}
+.type-badge {
+  margin:0;
+  color:#cf5543!important;
+  font-size:10px!important;
+  font-weight:700
+}
+.add-result {
+  color:#cf5543;
+  background:var(--soft);
+  border-radius:6px;
+  padding:7px 9px;
+  font-size:11px;
+  font-weight:600
+}
+.back-button {
+  background:none;
+  color:#69747d;
+  font-size:12px;
+  padding:0;
+  margin-bottom:19px
+}
+.detail-hero {
+  display:flex;
+  min-height:240px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden
+}
+.detail-hero>img {
+  width:170px;
+  object-fit:cover;
+  background:#ddd
+}
+.detail-info {
+  padding:24px 27px
+}
+.detail-info h2 {
+  font-size:28px;
+  margin:5px 0
+}
+.sub {
+  font-size:11px;
+  color:var(--muted)
+}
+.overview {
+  font-size:12px;
+  line-height:1.7;
+  max-width:730px;
+  color:#4e5962
+}
+.danger-action {
+  background:#fff0ed;
+  border:1px solid #f1cfc8;
+  color:#c94d3d;
+  border-radius:7px;
+  padding:8px 10px;
+  font-size:11px
+}
+.episode-section {
+  margin-top:34px
+}
+.episode-toolbar {
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  margin-bottom:14px
+}
+.episode-toolbar h3 {
+  font-size:19px;
+  margin:0
+}
+.season {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  margin:12px 0;
+  padding:0 12px
+}
+.season summary {
+  padding:13px 4px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:700
+}
+.season summary span {
+  font-size:11px;
+  color:var(--muted);
+  font-weight:400;
+  margin-left:7px
+}
+.episode-list {
+  display:grid;
+  gap:8px;
+  padding-bottom:11px
+}
+.episode {
+  border:1px solid #ece9e4;
+  border-radius:8px;
+  overflow:hidden
+}
+.episode-top {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#fff;
+  width:100%;
+  padding:13px;
+  text-align:left
+}
+.check {
+  display:grid;
+  place-items:center;
+  width:21px;
+  height:21px;
+  border:1px solid #cbd1d3;
+  border-radius:50%;
+  color:white;
+  flex:none
+}
+.watched .check {
+  background:var(--green);
+  border-color:var(--green)
+}
+.ep-name {
+  font-size:12px;
+  font-weight:600;
+  flex:1
+}
+.ep-date {
+  font-size:10px;
+  color:var(--muted)
+}
+.rating {
+  font-size:14px;
+  color:#e8ad2d;
+  letter-spacing:1px
+}
+.episode-body {
+  border-top:1px solid #efede9;
+  padding:12px 15px 15px 46px
+}
+.episode-body>p {
+  font-size:11px;
+  color:#69737c;
+  line-height:1.6
+}
+.episode-controls {
+  display:flex;
+  gap:8px
+}
+.comment-input {
+  min-width:0;
+  flex:1;
+  border:1px solid #dfdcd5;
+  border-radius:6px;
+  padding:8px;
+  font-size:11px;
+  outline:0
+}
+.star-picker {
+  white-space:nowrap
+}
+.star-picker button {
+  background:none;
+  color:#bdc3c5;
+  font-size:16px;
+  padding:0 1px
+}
+.star-picker button.on {
+  color:#e8ad2d
+}
+.comments {
+  display:grid;
+  gap:8px;
+  margin-top:13px
+}
+.comment {
+  background:#f9f5ef;
+  border:1px solid #e8dfd1;
+  border-radius:8px;
+  padding:12px 13px
+}
+.comment p {
+  font-size:13px;
+  color:#36414a;
+  line-height:1.65;
+  margin:0 0 5px
+}
+.comment small {
+  font-size:10px;
+  color:#88919a;
+  margin-right:7px
+}
+.comment button {
+  background:none;
+  color:#68737c;
+  font-size:11px;
+  padding:3px
+}
+.comment-editor {
+  display:block;
+  width:100%;
+  min-height:68px;
+  border:1px solid #d9d0c3;
+  border-radius:6px;
+  padding:8px;
+  margin-bottom:7px;
+  resize:vertical
+}
+.settings-card {
+  max-width:680px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:24px
+}
+.settings-heading {
+  display:flex;
+  justify-content:space-between
+}
+.settings-heading h3 {
+  margin:0
+}
+.settings-heading p {
+  font-size:12px;
+  color:var(--muted)
+}
+.connection-state {
+  font-size:12px;
+  color:var(--muted)
+}
+.connection-state.connected {
+  color:var(--green)
+}
+.form-label {
+  display:grid;
+  gap:7px;
+  font-size:12px;
+  font-weight:600;
+  margin:20px 0
+}
+.form-label input {
+  border:1px solid var(--line);
+  border-radius:7px;
+  padding:11px;
+  outline:0
+}
+.settings-actions,.dialog-actions {
+  display:flex;
+  gap:8px
+}
+dialog {
+  border:0;
+  border-radius:12px;
+  box-shadow:0 18px 60px #0004;
+  padding:0;
+  width: min(390px, calc(100% - 32px));
+}
+dialog::backdrop {
+  background: #18253488;
+}
+dialog form {
+  padding: 24px;
+}
+dialog h2 {
+  font-size: 18px;
+  margin: 0 0 7px;
+}
+dialog p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 20px;
+}
+@media (max-width: 720px) {
+  .sidebar {
+    display: none;
+  }
+  main {
+    margin: 0;
+    padding: 0 20px 42px;
+    width: 100%;
+  }
+  .topbar {
+    height: 104px;
+  }
+  .topbar h1 {
+    font-size: 20px;
+  }
+  .library-tools {
+    display: grid;
+  }
+  .filter-pills {
+    justify-self: start;
+  }
+  .content-grid {
+    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .detail-hero > img {
+    width: 115px;
+  }
+  .detail-info {
+    padding: 17px;
+  }
+  .detail-info h2 {
+    font-size: 21px;
+  }
+  .overview {
+    display: none;
+  }
+  .episode-body {
+    padding-left: 14px;
+  }
+  .ep-date {
+    display: none;
+  }
+  .search-row {
+    display: grid;
+  }
+  .search-row .primary-button {
+    justify-self: end;
+  }
+  .input-with-icon {
+    min-width: 0;
+  }
+}

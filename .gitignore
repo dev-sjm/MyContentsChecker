@@ -1,0 +1,11 @@
+# Local recovery copies must never be published with the portfolio.
+backups/
+
+# Editor and operating-system metadata.
+.DS_Store
+Thumbs.db
+
+# This project stores API tokens only in browser localStorage.
+# Do not add .env files or copied tokens to the repository.
+.env
+.env.*

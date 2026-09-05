@@ -1,0 +1,100 @@
+/* Portfolio additions: keep the reset action visually distinct without alarming visitors. */
+.demo-card {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+/* Accessible focus and a predictable dialog width on all screen sizes. */
+:focus-visible {
+  outline: 3px solid #1d6d9b;
+  outline-offset: 3px;
+}
+
+dialog {
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 18px 60px #0004;
+  color: #202a34;
+  max-width: calc(100vw - 32px);
+  padding: 0;
+  width: min(390px, calc(100vw - 32px));
+}
+
+dialog::backdrop { background: #18253488; }
+
+dialog form { padding: 28px; }
+dialog h2 { font-size: 20px; letter-spacing: -0.03em; margin: 0; }
+dialog p { font-size: 14px; line-height: 1.65; margin: 12px 0 24px; }
+dialog .dialog-actions { align-items: center; display: flex; gap: 8px; justify-content: flex-end; }
+dialog .dialog-actions button { min-height: 40px; }
+
+.card-trash {
+  align-items: center;
+  background: radial-gradient(circle, rgb(255 255 255 / 92%) 0 14px, transparent 15px);
+  border-radius: 999px;
+  box-shadow: none;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  padding: 0;
+  width: 32px;
+}
+
+.mobile-nav { display: none; }
+
+.attribution-card { margin-top: 14px; }
+.attribution-card h3 { margin: 0 0 8px; }
+.attribution-card p { color: #66717a; font-size: 12px; line-height: 1.65; }
+.attribution-card a { color: #1d6d9b; }
+
+.demo-episode-note {
+  color: #77818a;
+  font-size: 12px;
+  margin: -6px 0 14px;
+}
+
+@media (max-width: 720px) {
+  body { padding-bottom: 68px; }
+  .sidebar { display: none !important; }
+  .app-shell main { margin-left: 0; padding: 0 20px 42px; width: 100%; }
+  .topbar { height: 108px; gap: 12px; }
+  .topbar h1 { font-size: 21px; }
+  .topbar .primary-button { min-height: 44px; padding: 9px 12px; }
+  .library-tools { align-items: stretch; display: grid; }
+  .input-with-icon { min-width: 0; }
+  .filter-pills { justify-self: start; }
+  .content-grid { gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-hero > img { width: 112px; }
+  .detail-info { padding: 17px; }
+  .detail-info h2 { font-size: 21px; }
+  .overview { display: none; }
+  .episode-body { padding-left: 14px; }
+  .ep-date { display: none; }
+  .search-row { display: grid; }
+  .search-row .primary-button { justify-self: end; }
+  .card-trash { height: 40px; min-height: 40px; min-width: 40px; opacity: 1; width: 40px; font-size: 20px; line-height: 1; }
+  .episode-controls, .search-tools { align-items: stretch; flex-wrap: wrap; }
+  .episode-controls .comment-input { min-height: 40px; }
+  .mobile-nav {
+    background: #202d3b;
+    bottom: 0;
+    box-shadow: 0 -3px 18px #0003;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    left: 0;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+    position: fixed;
+    right: 0;
+    z-index: 10;
+  }
+  .mobile-nav button { background: transparent; color: #b9c5cf; min-height: 48px; padding: 2px; }
+  .mobile-nav button.active, .mobile-nav button:focus-visible { color: #fff; }
+  .mobile-nav span { display: block; font-size: 19px; line-height: 20px; }
+  .mobile-nav small { font-size: 9px; }
+}
+
+@media (max-width: 720px) {
+  .demo-card { align-items: flex-start; flex-direction: column; gap: 14px; }
+}
