@@ -172,6 +172,8 @@ function setView(view, { historyMode = 'push' } = {}) {
   // The shortcut belongs to the library header; other views already expose their own actions.
   $('#add-content').classList.toggle('hidden', view !== 'home');
   saveRoute(view, state.detailId, historyMode);
+  // Episode changes persist immediately in localStorage; repaint cards when returning home.
+  if (view === 'home') renderHome();
 }
 
 function renderHome() {
