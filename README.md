@@ -1,6 +1,7 @@
 # MyContentsChecker
 
 여러 스트리밍 서비스에 흩어진 시청 진척도, 회차별 별점과 감상을 한곳에서 관리하는 브라우저 localstorage에 기반하는 앱입니다. 백엔드에 데이터를 저장하지 않고, 브라우저의 localstorage에 모든 데이터를 저장합니다.
+https://dev-sjm.github.io/MyContentsChecker 로 배포됩니다.
 
 ## 데모 경험
 
