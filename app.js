@@ -144,8 +144,26 @@ async function loadDetails(preview) {
   }
 }
 
-function setView(view) {
+/** Keeps app screens addressable so the browser's back and forward buttons work. */
+function routeFromLocation() {
+  const [rawView, rawId] = location.hash.slice(1).split('/');
+  const view = ['home', 'search', 'detail', 'trash', 'settings'].includes(rawView) ? rawView : 'home';
+  return { view, detailId: rawId ? decodeURIComponent(rawId) : null };
+}
+
+function routeUrl(view, detailId = null) {
+  return `#${view}${view === 'detail' && detailId ? `/${encodeURIComponent(detailId)}` : ''}`;
+}
+
+function saveRoute(view, detailId, mode) {
+  if (mode === 'none') return;
+  const method = mode === 'replace' ? 'replaceState' : 'pushState';
+  history[method]({ view, detailId }, '', routeUrl(view, detailId));
+}
+
+function setView(view, { historyMode = 'push' } = {}) {
   state.view = view;
+  if (view !== 'detail') state.detailId = null;
   $all('.view').forEach(node => node.classList.toggle('active', node.id === `${view}-view`));
   $all('.nav-item').forEach(node => node.classList.toggle('active', node.dataset.view === view));
   $all('.mobile-nav [data-view]').forEach(node => node.classList.toggle('active', node.dataset.view === view));
@@ -153,6 +171,7 @@ function setView(view) {
   $('#page-kicker').textContent = labels[view][0]; $('#page-title').textContent = labels[view][1];
   // The shortcut belongs to the library header; other views already expose their own actions.
   $('#add-content').classList.toggle('hidden', view !== 'home');
+  saveRoute(view, state.detailId, historyMode);
 }
 
 function renderHome() {
@@ -185,18 +204,24 @@ function episodeMarkup(episode, item) {
 }
 
 function commentKey(episodeId) { return `${state.detailId}:${episodeId}`; }
-function commentMarkup(episodeId) { return (state.comments[commentKey(episodeId)] || []).map(comment => `<article class="comment" data-comment="${comment.id}"><p>${escapeHtml(comment.text)}</p><small>${new Date(comment.createdAt).toLocaleString('ko-KR')}</small><button data-edit-comment="${comment.id}">수정</button><button data-delete-comment="${comment.id}">삭제</button></article>`).join(''); }
+function formatCommentTime(timestamp) { return new Date(timestamp).toLocaleString('ko-KR'); }
+function commentMarkup(episodeId) {
+  return (state.comments[commentKey(episodeId)] || []).map(comment => {
+    const edited = comment.editedAt ? ` · 수정 ${formatCommentTime(comment.editedAt)}` : '';
+    return `<article class="comment" data-comment="${comment.id}"><p>${escapeHtml(comment.text)}</p><small>작성 ${formatCommentTime(comment.createdAt)}${edited}</small><button data-edit-comment="${comment.id}">수정</button><button data-delete-comment="${comment.id}">삭제</button></article>`;
+  }).join('');
+}
 
-function showDetail(id) {
-  state.detailId = id; const content = contentOf(id); const item = libraryItem(id); if (!content || !item) return setView('home');
+function showDetail(id, { historyMode = 'push' } = {}) {
+  state.detailId = id; const content = contentOf(id); const item = libraryItem(id); if (!content || !item) return setView('home', { historyMode });
   const groups = Object.groupBy ? Object.groupBy(content.episodes, e => e.season || 1) : content.episodes.reduce((map,e) => ((map[e.season || 1] ||= []).push(e), map), {});
   let seasons = Object.entries(groups).sort(([a],[b]) => Number(a) - Number(b)); if (state.episodeSort === 'newest') seasons = seasons.reverse();
   const hasMultipleSeasons = seasons.length > 1;
   const demoNote = content.demoSample && episodeCount(content) > content.episodes.length
     ? `<p class="demo-episode-note">실제 전체 ${episodeCount(content)}화 중 대표 회차 정보입니다.</p>` : '';
-  $('#detail-content').innerHTML = `<article class="detail-hero"><img src="${escapeHtml(content.image)}" alt=""><div class="detail-info"><p class="type-badge">${escapeHtml(content.type)}</p><h2>${escapeHtml(content.title)}</h2><p class="sub">최초 방영일 ${escapeHtml(content.date)} · 제작 국가 ${escapeHtml(content.country)}</p><p class="overview">${escapeHtml(content.description)}</p><button class="danger-action" id="delete-content">휴지통으로 이동</button></div></article><section class="episode-section"><div class="episode-toolbar"><div><p class="eyebrow">EPISODES</p><h3>에피소드</h3></div><label>나열 <select id="episode-sort"><option value="oldest">날짜순 · 오래된 순</option><option value="newest">최신순 · 최신이 상단</option></select></label></div>${demoNote}${seasons.map(([season, episodes]) => { const ordered = state.episodeSort === 'newest' ? [...episodes].reverse() : episodes; return `<details class="season" ${hasMultipleSeasons ? '' : 'open'}><summary class="${hasMultipleSeasons ? '' : 'hidden'}">시즌 ${season} <span>${episodes.length}개 에피소드</span></summary><div class="episode-list">${ordered.map(ep => episodeMarkup(ep, item)).join('')}</div></details>`; }).join('')}</section>`;
-  $('#episode-sort').value = state.episodeSort; $('#episode-sort').onchange = event => { state.episodeSort = event.target.value; showDetail(id); };
-  $('#delete-content').onclick = () => moveToTrash(id); bindDetailEvents(); setView('detail');
+  $('#detail-content').innerHTML = `<article class="detail-hero"><img src="${escapeHtml(content.image)}" alt=""><div class="detail-info"><p class="type-badge">${escapeHtml(content.type)}</p><h2>${escapeHtml(content.title)}</h2><p class="sub">최초 방영일 ${escapeHtml(content.date)} · 제작 국가 ${escapeHtml(content.country)}</p><p class="overview">${escapeHtml(content.description)}</p><button class="danger-action" id="delete-content">휴지통으로 이동</button></div></article><section class="episode-section"><div class="episode-toolbar"><div><p class="eyebrow">EPISODES</p><h3>에피소드</h3></div><label><select id="episode-sort" aria-label="에피소드 나열 방식"><option value="oldest">날짜순 · 오래된 순</option><option value="newest">최신순 · 최신이 상단</option></select></label></div>${demoNote}${seasons.map(([season, episodes]) => { const ordered = state.episodeSort === 'newest' ? [...episodes].reverse() : episodes; return `<details class="season" ${hasMultipleSeasons ? '' : 'open'}><summary class="${hasMultipleSeasons ? '' : 'hidden'}">시즌 ${season} <span>${episodes.length}개 에피소드</span></summary><div class="episode-list">${ordered.map(ep => episodeMarkup(ep, item)).join('')}</div></details>`; }).join('')}</section>`;
+  $('#episode-sort').value = state.episodeSort; $('#episode-sort').onchange = event => { state.episodeSort = event.target.value; showDetail(id, { historyMode: 'none' }); };
+  $('#delete-content').onclick = () => moveToTrash(id); bindDetailEvents(); setView('detail', { historyMode });
 }
 
 /** All comment mutations update the local row rather than rerendering/scrolling the detail view. */
@@ -274,6 +299,13 @@ function renderTrash() {
 
 async function runSearch() { const query = $('#search-query').value.trim(); if (!query) return; $('#search-status').textContent = '콘텐츠를 검색하는 중…'; $('#search-results').innerHTML = ''; try { state.searchResults = await searchProviders(query); $('#search-status').textContent = state.searchResults.length ? `${state.searchResults.length}개 결과` : '검색 결과가 없습니다.'; } catch { state.searchResults = []; $('#search-status').textContent = '검색 서버에 연결하지 못했습니다.'; } renderSearch(); }
 
+function applyHistoryRoute() {
+  const route = routeFromLocation();
+  if (route.view === 'detail' && route.detailId) return showDetail(route.detailId, { historyMode: 'none' });
+  setView(route.view, { historyMode: 'none' });
+  if (route.view === 'trash') renderTrash();
+}
+
 function bindAppEvents() {
   $('.brand').onclick = event => { event.preventDefault(); setView('home'); };
   $all('[data-view]').forEach(button => button.onclick = () => { setView(button.dataset.view); if (button.dataset.view === 'trash') renderTrash(); });
@@ -282,7 +314,13 @@ function bindAppEvents() {
   $('#search-button').onclick = runSearch; $('#search-query').onkeydown = event => { if (event.key === 'Enter') runSearch(); }; $('#search-sort').onchange = event => { state.searchSort = event.target.value; renderSearch(); };
   $('#tmdb-token').value = state.token; const updateTokenState = () => { $('#tmdb-state').textContent = state.token ? '연결됨' : '연결 안 됨'; $('#tmdb-state').classList.toggle('connected', Boolean(state.token)); }; updateTokenState(); $('#save-token').onclick = () => { state.token = $('#tmdb-token').value.trim(); if (state.token) localStorage.setItem(KEYS.token, state.token); updateTokenState(); }; $('#clear-token').onclick = () => { state.token = ''; $('#tmdb-token').value = ''; localStorage.removeItem(KEYS.token); updateTokenState(); };
   $('#reset-demo').onclick = async () => { if (!await confirmAction('데모 데이터 다시 불러오기', '현재 라이브러리, 댓글, 휴지통을 데모 초기 상태로 바꿀까요?', '초기화')) return; seedDemoData(true); renderHome(); renderTrash(); setView('home'); };
+  window.addEventListener('popstate', applyHistoryRoute);
 }
 
-function initialize() { seedDemoData(); bindAppEvents(); renderHome(); renderTrash(); }
+function initialize() {
+  seedDemoData(); bindAppEvents(); renderHome(); renderTrash();
+  const route = routeFromLocation();
+  applyHistoryRoute();
+  history.replaceState(route, '', routeUrl(state.view, state.detailId));
+}
 initialize();

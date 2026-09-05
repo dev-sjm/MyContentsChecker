@@ -431,7 +431,8 @@ main {
 .episode-list {
   display:grid;
   gap:8px;
-  padding-bottom:11px
+  padding-bottom:11px;
+  padding-top:11px
 }
 .episode {
   border:1px solid #ece9e4;
